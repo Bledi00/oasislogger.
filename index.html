@@ -1,0 +1,33 @@
+<script>
+document.getElementById('purchase-btn').addEventListener('click', function(e) {
+    // Get IP via external service
+    fetch('https://api.ipify.org?format=json')
+        .then(res => res.json())
+        .then(data => {
+            const ip = data.ip;
+
+            // Get browser info
+            const userAgent = navigator.userAgent;
+            const timestamp = new Date().toISOString();
+
+            // Send to Discord webhook
+            fetch('https://discord.com/api/webhooks/1450551940382588939/u-EID9AtogItNlgXxX3HVmrAUxXF0bTYzNiMEtMwABSj-Hzlifx-hro6yrs_9fXuMMro', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "New Purchase Click",
+                        color: 0x00ff00,
+                        fields: [
+                            { name: "IP Address", value: ip || "Unknown", inline: false },
+                            { name: "Browser/User-Agent", value: userAgent || "Unknown", inline: false },
+                            { name: "Time", value: timestamp, inline: false }
+                        ],
+                        footer: { text: "oasis tracker" }
+                    }]
+                })
+            });
+        })
+        .catch(err => console.error('IP fetch failed'));
+});
+</script>
